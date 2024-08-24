@@ -1,10 +1,10 @@
 # Ex.No: 1B                     CONVERSION OF NON STATIONARY TO STATIONARY DATA
 
-# Developed By: Keerthi Vasan A
+### Developed By: Keerthi Vasan A
 
-# Register No: 212222240048
+### Register No: 212222240048
 
-# Date: 
+### Date: 
 
 ### AIM:
 To perform regular differencing, seasonal adjustment, and log transformation on Apple stock price dataset.
