@@ -1,41 +1,44 @@
 # Ex.No: 1B                     CONVERSION OF NON STATIONARY TO STATIONARY DATA
 
-# Developed By: Shaik Shoaib Nawaz
+# Developed By: Keerthi Vasan A
 
-# Register No: 212222240094
+# Register No: 212222240048
 
 # Date: 
 
 ### AIM:
-To perform regular differncing,seasonal adjustment and log transformatio on power consumption dataset
+To perform regular differencing, seasonal adjustment, and log transformation on the Apple stock price dataset
 ### ALGORITHM:
 1. Import the required packages like pandas and numpy
 2. Read the data using the pandas
-3. Perform the data preprocessing if needed and apply regular differncing,seasonal adjustment,log transformation.
-4. Plot the data according to need, before and after regular differncing,seasonal adjustment,log transformation.
+3. Perform the data preprocessing if needed and apply regular differencing, seasonal adjustment, and log transformation.
+4. Plot the data according to need, before and after regular differencing, seasonal adjustment, and log transformation.
 5. Display the overall results.
 ### PROGRAM:
 #### IMPORTING PACKAGES:
-```
+```py
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
 %matplotlib inline
+
 ```
 #### Preprocessing:
-```
-train=pd.read_csv('/content/KwhConsumptionBlower78_1.csv')
-train.timestamp=pd.to_datetime(train.TxnDate,format='%d %b %Y')
-train.index=train.timestamp
-train.drop("TxnDate",axis=1,inplace=True)
+```py
+train = pd.read_csv('/content/apple_stock.csv')
+train['Date'] = pd.to_datetime(train['Date'], format='%Y-%m-%d')
+train.index = train['Date']
+train.drop('Date', axis=1, inplace=True)
 train.head()
 print(train.columns)
 train.columns = train.columns.str.strip()
-train['Consumption'].plot()
+train['Adj Close'].plot(title='Adjusted Close Price Over Time')
 ```
 #### REGULAR DIFFERENCING:
-```
+```py
 from statsmodels.tsa.stattools import adfuller
+
 def adf_test(timeseries):
     print("Results of Dickey-Fuller Test:")
     dftest = adfuller(timeseries, autolag="AIC")
@@ -43,39 +46,42 @@ def adf_test(timeseries):
     for key, value in dftest[4].items():
         dfoutput["Critical Value (%s)" % key] = value
     print(dfoutput)
-adf_test(train['Consumption'])
-train['Consumption_diff']=train['Consumption']-train['Consumption'].shift(1)
-train['Consumption_diff'].dropna().plot()
+
+adf_test(train['Adj Close'])
+
+train['Adj Close_diff'] = train['Adj Close'] - train['Adj Close'].shift(1)
+train['Adj Close_diff'].dropna().plot(title='Differenced Adjusted Close Price')
 ```
 #### SEASONAL DIFFERENCING:
-```
-n=7
-train['Consumption_diff']=train['Consumption']-train['Consumption'].shift(n)
-train['Consumption_diff'].dropna().plot()
+```py
+n = 7  # Assuming a weekly seasonality for demonstration
+
+train['Adj Close_seasonal_diff'] = train['Adj Close'] - train['Adj Close'].shift(n)
+train['Adj Close_seasonal_diff'].dropna().plot(title='Seasonal Differenced Adjusted Close Price')
 ```
 #### LOG TRANSFORMATION:
+```py
+train['Adj Close_log'] = np.log(train['Adj Close'])
+train['Adj Close_log_diff'] = train['Adj Close_log'] - train['Adj Close_log'].shift(1)
+train['Adj Close_log_diff'].dropna().plot(title='Log Differenced Adjusted Close Price')
 ```
-train['Consumption_log']=np.log(train['Consumption'])
-train['Consumption_log_diff']=train['Consumption_log']-train['Consumption_log'].shift(1)
-train['Consumption_log_diff'].dropna().plot()
-```
-
 
 ### OUTPUT:
 
-
 REGULAR DIFFERENCING:
-![regular difference](image1.png)
+
+![Screenshot 2024-08-24 104919](https://github.com/user-attachments/assets/a0b8e22e-45bc-4544-8a32-2cf82e7161f8)
 
 
 SEASONAL ADJUSTMENT:
-![seasonal difference](image2.png)
+
+![Screenshot 2024-08-24 104953](https://github.com/user-attachments/assets/136c3d7a-0477-4474-9986-06f64a6e0f8b)
 
 
 LOG TRANSFORMATION:
-![log transformation](image3.png)
 
+![Screenshot 2024-08-24 105025](https://github.com/user-attachments/assets/53634086-f49b-40b9-811f-49757b5c84d8)
 
 
 ### RESULT:
-Thus we have successfully created the python code for the conversion of non stationary to stationary data of power consumption dataset.
+Thus we have successfully created the Python code for the conversion of non-stationary to stationary data of Apple stock price dataset.
